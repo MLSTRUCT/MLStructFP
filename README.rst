@@ -1,22 +1,22 @@
 
-===========
-MLSTRUCT-FP
-===========
+==========
+MLStructFP
+==========
 
-.. image:: https://img.shields.io/github/actions/workflow/status/MLSTRUCT/MLSTRUCT-FP/ci.yml?branch=master
-    :target: https://github.com/MLSTRUCT/MLSTRUCT-FP/actions/workflows/ci.yml
+.. image:: https://img.shields.io/github/actions/workflow/status/MLSTRUCT/MLStructFP/ci.yml?branch=master
+    :target: https://github.com/MLSTRUCT/MLStructFP/actions/workflows/ci.yml
     :alt: Build status
 
-.. image:: https://img.shields.io/github/issues/MLSTRUCT/MLSTRUCT-FP
-    :target: https://github.com/MLSTRUCT/MLSTRUCT-FP/issues
+.. image:: https://img.shields.io/github/issues/MLSTRUCT/MLStructFP
+    :target: https://github.com/MLSTRUCT/MLStructFP/issues
     :alt: Open issues
 
 .. image:: https://badge.fury.io/py/MLStructFP.svg
     :target: https://pypi.org/project/MLStructFP
     :alt: PyPi package
 
-.. image:: https://codecov.io/gh/MLSTRUCT/MLSTRUCT-FP/branch/master/graph/badge.svg?token=EJ8S2AAGUO
-    :target: https://codecov.io/gh/MLSTRUCT/MLSTRUCT-FP
+.. image:: https://codecov.io/gh/MLSTRUCT/MLStructFP/branch/master/graph/badge.svg?token=EJ8S2AAGUO
+    :target: https://codecov.io/gh/MLSTRUCT/MLStructFP
     :alt: Codecov
 
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg
@@ -29,7 +29,7 @@ MLSTRUCT-FP
 Description
 -----------
 
-This repo contains the base library to load and parse floor plans from the MLSTRUCT-FP dataset, which
+This repo contains the base library to load and parse floor plans from the MLStructFP dataset, which
 contains over 954 large-scale floor plan images, alongside annotations for their walls in JSON
 format. The database loader loads in memory the Floor, Walls, and Slab objects, and also
 offers methods to create custom images from floor plans by applying a crop, a rotation, and a custom
@@ -39,7 +39,7 @@ The images can be generated from the real rasterized plan or by using the polygo
 JSON file. Both image and wall polygons are consistent in their placement.
 
 See more information in our `published article <https://doi.org/10.1016/j.autcon.2023.105132>`_; also,
-check out the `AI segmentation model <https://github.com/MLSTRUCT/MLSTRUCT-FP_benchmarks>`_ that tests this dataset.
+check out the `AI segmentation model <https://github.com/MLSTRUCT/MLStructFP_benchmarks>`_ that tests this dataset.
 
 
 First steps
@@ -146,8 +146,8 @@ Object API
 ----------
 
 The primary usage of the API is illustrated on the
-`jupyter notebook <https://github.com/MLSTRUCT/MLSTRUCT-FP/blob/master/example.ipynb>`_. The most fundamental
-object is `DbLoader <https://github.com/MLSTRUCT/MLSTRUCT-FP/blob/master/MLStructFP/db/_db_loader.py>`_,
+`jupyter notebook <https://github.com/MLSTRUCT/MLStructFP/blob/master/example.ipynb>`_. The most fundamental
+object is `DbLoader <https://github.com/MLSTRUCT/MLStructFP/blob/master/MLStructFP/db/_db_loader.py>`_,
 which receives the path of the ``fp.json`` file.
 
 .. code-block:: python
@@ -162,9 +162,9 @@ which receives the path of the ``fp.json`` file.
   :width: 640
   :alt: Example tabulate
 
-DbLoader creates a dict of `Floor <https://github.com/MLSTRUCT/MLSTRUCT-FP/blob/master/MLStructFP/db/_floor.py>`_ object,
-which each contains a dict of `Rect <https://github.com/MLSTRUCT/MLSTRUCT-FP/blob/master/MLStructFP/db/_c_rect.py>`_ and
-`Slab <https://github.com/MLSTRUCT/MLSTRUCT-FP/blob/master/MLStructFP/db/_c_slab.py>`_ objects. Each item is associated
+DbLoader creates a dict of `Floor <https://github.com/MLSTRUCT/MLStructFP/blob/master/MLStructFP/db/_floor.py>`_ object,
+which each contains a dict of `Rect <https://github.com/MLSTRUCT/MLStructFP/blob/master/MLStructFP/db/_c_rect.py>`_ and
+`Slab <https://github.com/MLSTRUCT/MLStructFP/blob/master/MLStructFP/db/_c_slab.py>`_ objects. Each item is associated
 with their respective IDs. Floor objects also have many methods to retrieve their elements, plot, and apply
 transformations (aka mutations) such as scaling or rotation using the ``mutate()`` method:
 
@@ -187,8 +187,8 @@ transformations (aka mutations) such as scaling or rotation using the ``mutate()
   :alt: Example plot
 
 Finally, the most important classes are
-`RectBinaryImage <https://github.com/MLSTRUCT/MLSTRUCT-FP/blob/master/MLStructFP/db/image/_rect_binary.py>`_ and
-`RectFloorPhoto <https://github.com/MLSTRUCT/MLSTRUCT-FP/blob/master/MLStructFP/db/image/_rect_photo.py>`_, whose
+`RectBinaryImage <https://github.com/MLSTRUCT/MLStructFP/blob/master/MLStructFP/db/image/_rect_binary.py>`_ and
+`RectFloorPhoto <https://github.com/MLSTRUCT/MLStructFP/blob/master/MLStructFP/db/image/_rect_photo.py>`_, whose
 main responsibilities are creating plan crops for machine learning model training. These classes perform crops
 and downsampling on any image size and scale factor. For both objects, the main methods are:
 

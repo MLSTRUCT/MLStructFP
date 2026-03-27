@@ -13,7 +13,7 @@ __license__ = 'MIT'
 __version__ = '0.7.4'
 
 # URL
-__url__ = 'https://github.com/MLSTRUCT/MLSTRUCT-FP'
-__url_bug_tracker__ = 'https://github.com/MLSTRUCT/MLSTRUCT-FP/issues'
-__url_documentation__ = 'https://github.com/MLSTRUCT/MLSTRUCT-FP'
-__url_source_code__ = 'https://github.com/MLSTRUCT/MLSTRUCT-FP'
+__url__ = 'https://github.com/MLSTRUCT/MLStructFP'
+__url_bug_tracker__ = 'https://github.com/MLSTRUCT/MLStructFP/issues'
+__url_documentation__ = 'https://github.com/MLSTRUCT/MLStructFP'
+__url_source_code__ = 'https://github.com/MLSTRUCT/MLStructFP'
