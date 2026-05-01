@@ -41,6 +41,7 @@ class Floor(object):
     image_scale: float
     project_id: int
     project_label: str
+    _original_points: Optional[Dict]
 
     def __init__(self, floor_id: int, image_path: str, image_scale: NumberType,
                  project_id: int, project_label: str = '', category: int = 0, category_name: str = '',
@@ -196,46 +197,54 @@ class Floor(object):
         return fig
 
     def mutate(self, angle: NumberType = 0, sx: NumberType = 1, sy: NumberType = 1,
-               scale_first: bool = True) -> 'Floor':
+           scale_first: bool = True) -> 'Floor':
         """
         Apply mutator for each object within the floor.
 
-        :param angle: Angle
-        :param sx: Scale on x-axis
-        :param sy: Scale on y-axis
-        :param scale_first: Scale first, then rotate
+        Unlike the previous implementation, this method is idempotent with respect
+        to the original geometry: it always restores points to their original
+        coordinates before applying the new transform, preventing floating-point
+        drift accumulation from repeated undo/redo cycles.
+
+        :param angle: Rotation angle in degrees
+        :param sx: Scale on x-axis (non-zero)
+        :param sy: Scale on y-axis (non-zero)
+        :param scale_first: If True, scale then rotate; otherwise rotate then scale
         :return: Floor reference
         """
         assert isinstance(angle, NumberInstance)
         assert isinstance(sx, NumberInstance) and sx != 0
         assert isinstance(sy, NumberInstance) and sy != 0
 
-        # Undo last mutation
-        if self._last_mutation is not None:
-            _angle, _sx, _sy = self.mutator_angle, self.mutator_scale_x, self.mutator_scale_y
-            self._last_mutation = None  # Reset mutation
-            self.mutate(-_angle, 1 / _sx, 1 / _sy, scale_first=False)  # Reverse operation
+        all_components = (*self.rect, *self.point, *self.slab, *self.room, *self.item)
 
-        # Apply mutation
+        # Snapshot original coordinates on very first mutation
+        if self._original_points is None:
+            self._original_points = {
+                id(p): (p.x, p.y)
+                for c in all_components
+                for p in c.points
+            }
+
+        # Restore to original before applying new transform
+        for c in all_components:
+            for p in c.points:
+                p.x, p.y = self._original_points[id(p)]
+
+        # Apply new mutation from clean state
         rotation_center = GeomPoint2D()
-        o: Tuple['BaseComponent']
-        for o in (self.rect, self.point, self.slab, self.room, self.item):
-            for c in o:
-                for p in c.points:
-                    if not scale_first:
-                        p.rotate(rotation_center, angle)
-                    p.x *= sx
-                    p.y *= sy
-                    if scale_first:
-                        p.rotate(rotation_center, angle)
+        for c in all_components:
+            for p in c.points:
+                if not scale_first:
+                    p.rotate(rotation_center, angle)
+                p.x *= sx
+                p.y *= sy
+                if scale_first:
+                    p.rotate(rotation_center, angle)
 
-        # Update mutation
+        # Update state
         self._bb = None
-        self._last_mutation = {
-            'angle': angle,
-            'sx': sx,
-            'sy': sy
-        }
+        self._last_mutation = {'angle': angle, 'sx': sx, 'sy': sy}
 
         return self
 
